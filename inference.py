@@ -2,7 +2,7 @@
 YOCTO Inference
 ===============
 
-Generate text with Yocto, the world's smallest language model family.
+Generate text with Yocto, the world's smallest language model.
 
 Usage:
     python inference.py --prompt "Once upon a time"
@@ -137,23 +137,35 @@ def generate_stream(
 def interactive_mode(model, tokenizer, device, args):
     """Run interactive generation with streaming output."""
     
-    print("\n" + "=" * 50)
-    print("YOCTO — Interactive Mode (with KV-Cache)")
-    print("=" * 50)
-    print("Enter a prompt to generate text. Type 'quit' to exit.\n")
+    print()
+    print("  ██╗   ██╗ ██████╗  ██████╗████████╗ ██████╗ ")
+    print("  ╚██╗ ██╔╝██╔═══██╗██╔════╝╚══██╔══╝██╔═══██╗")
+    print("   ╚████╔╝ ██║   ██║██║        ██║   ██║   ██║")
+    print("    ╚██╔╝  ██║   ██║██║        ██║   ██║   ██║")
+    print("     ██║   ╚██████╔╝╚██████╗   ██║   ╚██████╔╝")
+    print("     ╚═╝    ╚═════╝  ╚═════╝   ╚═╝    ╚═════╝ ")
+    print()
+    print("  Yocto tells children's stories. Start with a beginning:")
+    print()
+    print('    "Once upon a time"')
+    print('    "There was a little girl named"')
+    print('    "One day, a boy found"')
+    print()
+    print("  Type 'quit' to exit.")
+    print()
     
     while True:
         try:
-            prompt = input(">>> ").strip()
+            prompt = input("  Story: ").strip()
             
             if not prompt:
                 continue
             if prompt.lower() == 'quit':
-                print("Goodbye!")
+                print("\n  Goodbye! 👋\n")
                 break
             
             print()
-            print(prompt, end='', flush=True)
+            print(f"  {prompt}", end='', flush=True)
             
             input_ids = torch.tensor([tokenizer.encode(prompt)], device=device)
             
@@ -175,10 +187,10 @@ def interactive_mode(model, tokenizer, device, args):
             elapsed = time.perf_counter() - start_time
             tokens_per_sec = token_count / elapsed if elapsed > 0 else 0
             
-            print(f"\n\n[{token_count} tokens in {elapsed:.2f}s — {tokens_per_sec:.1f} tokens/sec]\n")
+            print(f"\n\n  [{token_count} tokens • {elapsed:.2f}s • {tokens_per_sec:.1f} tok/s]\n")
             
         except KeyboardInterrupt:
-            print("\nGoodbye!")
+            print("\n\n  Goodbye! 👋\n")
             break
 
 

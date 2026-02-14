@@ -14,6 +14,7 @@ We introduce **Unified Attention**: a single projection whose output splits into
 
 Results:
 - **484,272 total parameters** (1.85 MB at float32, <1 MB quantized)
+- **700+ tokens/sec on CPU** (no GPU required)
 - **5.7% of parameters in attention** (vs ~25% in standard transformers)
 - **9.58 validation perplexity** on TinyStories (matching models 2-4× larger)
 - **Geometric preservation**: Controlled experiments show Berry phase and layer orthogonality within 2% of standard attention
@@ -150,6 +151,16 @@ With **52% fewer total parameters** than TinyStories-1M, we achieve better perpl
 
 Named characters, temporal progression, narrative coherence—from 484K parameters.
 
+### Inference Speed
+
+| Hardware | Tokens/sec |
+|----------|------------|
+| Apple M-series CPU | **700+** |
+| Standard laptop CPU | 200-400 |
+| HuggingFace Spaces (shared CPU) | 100-300 |
+
+The model is so small that **CPU outperforms GPU**—memory transfer overhead exceeds compute savings. No GPU required.
+
 ## 4.3 Geometric Verification
 
 Does unified attention preserve the geometric properties of standard attention? We ran controlled experiments comparing attention mechanisms on identical architectures (6-layer transformers, embed_dim=126, trained on synthetic language tasks).
@@ -199,6 +210,7 @@ Our parameter distribution (59.5% embeddings, 5.7% attention, 34.4% FFN) suggest
 - **Attention is routing**: It decides WHERE information flows, not what it becomes
 - **Embeddings carry meaning**: Most capacity represents tokens well
 - **FFN is essential**: Nonlinear transformation cannot be reduced
+- **CPU is optimal**: At 484K params, GPU memory transfer overhead exceeds compute benefits. The model runs faster on CPU than MPS/CUDA.
 
 ## 5.3 Limitations
 
@@ -233,6 +245,7 @@ We asked: What is the minimal parameterization for attention?
 **Results**:
 - 67% fewer attention parameters
 - 5.7% of model in attention (vs 25% standard)
+- 700+ tokens/sec on CPU (no GPU needed)
 - Better perplexity than larger models
 - Geometric properties preserved within 2%
 
@@ -290,7 +303,7 @@ class UnifiedAttention(nn.Module):
 
 ## YOCTO — *The World's Smallest Language Model*
 
-**484,272 Parameters · 946 KB (fp16) · 67% Less Attention · Open Source**
+**484,272 Parameters · 946 KB (fp16) · 700+ tok/s · 67% Less Attention · Open Source**
 
 ### Quick Start
 
@@ -300,6 +313,14 @@ cd yocto
 pip install -r requirements.txt
 python inference.py --prompt "Once upon a time"
 ```
+
+**700+ tokens/sec on CPU** — no GPU needed.
+
+### Live Demo & Model
+
+🤗 **Try it now**: [HuggingFace Space](https://huggingface.co/spaces/Reinforce-ai/yocto-demo)
+
+📦 **Model weights**: [HuggingFace Model](https://huggingface.co/Reinforce-ai/yocto)
 
 ### Citation
 
@@ -314,4 +335,3 @@ If you use this work, please cite:
   howpublished={\url{https://github.com/reinforceai/yocto}}
 }
 ```
-

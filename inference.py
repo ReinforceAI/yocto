@@ -222,8 +222,6 @@ def main():
     if args.device == 'auto':
         if torch.cuda.is_available():
             device = 'cuda'
-        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-            device = 'mps'
         else:
             device = 'cpu'
     else:

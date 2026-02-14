@@ -236,7 +236,32 @@ Our parameter distribution (59.5% embeddings, 5.7% attention, 34.4% FFN) suggest
 
 ---
 
-# 7. Conclusion
+# 7. Future Work
+
+We've demonstrated unified attention at 484K parameters. Two questions remain:
+
+**Scale**: Does the 67% reduction hold at 100M or 1B parameters? The redundancy argument should apply regardless of scale, but this requires empirical verification.
+
+**Domains**: TinyStories uses constrained vocabulary. Does unified attention maintain its advantage on general language, code, or multilingual data?
+
+### Our Goal: AI That Runs Everywhere
+
+Yocto is the first step toward AI that needs no cloud, no API, no internet:
+
+| Platform | Use Case |
+|----------|----------|
+| **Video games** | NPCs with real dialogue, not scripted lines |
+| **Browsers** | Local assistants without sending data to servers |
+| **Phones** | Private AI that works offline |
+| **IoT/Embedded** | Smart devices that think locally |
+
+At 946 KB and 700+ tokens/sec on CPU, Yocto proves this is possible. The goal is to scale unified attention to build larger models that remain small enough to run anywhere — private, fast, and free.
+
+We release all code, weights, and training configs to enable this future.
+
+---
+
+# 8. Conclusion
 
 We asked: What is the minimal parameterization for attention?
 

@@ -311,7 +311,21 @@ The physics of attention is simpler than standard architectures suggest. Three m
 
 # References
 
-[1] Vaswani et al., "Attention Is All You Need," NeurIPS 2017. [2] Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding," 2021. [3] Eldan & Li, "TinyStories: How Small Can Language Models Be?," 2023. [4] Goedecke, "Training a Language Model on a Laptop," 2024. [5] Shazeer, "Fast Transformer Decoding: One Write-Head is All You Need," 2019. [6] Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021. [7] Lee-Thorp et al., "FNet: Mixing Tokens with Fourier Transforms," 2021. [8] Gu & Dao, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces," 2023.
+[1] Vaswani et al., "Attention Is All You Need," NeurIPS 2017.
+
+[2] Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding," 2021.
+
+[3] Eldan & Li, "TinyStories: How Small Can Language Models Be?," 2023.
+
+[4] Goedecke, "Training a Language Model on a Laptop," 2024.
+
+[5] Shazeer, "Fast Transformer Decoding: One Write-Head is All You Need," 2019.
+
+[6] Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021.
+
+[7] Lee-Thorp et al., "FNet: Mixing Tokens with Fourier Transforms," 2021.
+
+[8] Gu & Dao, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces," 2023.
 
 ---
 

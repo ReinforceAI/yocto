@@ -311,11 +311,71 @@ The physics of attention is simpler than standard architectures suggest. Three m
 
 # References
 
-[1] Vaswani et al., "Attention Is All You Need," NeurIPS 2017.
-[2] Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding," 2021.
-[3] Eldan & Li, "TinyStories: How Small Can Language Models Be?," 2023.
-[4] Goedecke, "Training a Language Model on a Laptop," 2024.
-[5] Shazeer, "Fast Transformer Decoding: One Write-Head is All You Need," 2019.
-[6] Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021.
-[7] Lee-Thorp et al., "FNet: Mixing Tokens with Fourier Transforms," 2021.
-[8] Gu & Dao, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces," 2023.
+[1] Vaswani et al., "Attention Is All You Need," NeurIPS 2017. [2] Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding," 2021. [3] Eldan & Li, "TinyStories: How Small Can Language Models Be?," 2023. [4] Goedecke, "Training a Language Model on a Laptop," 2024. [5] Shazeer, "Fast Transformer Decoding: One Write-Head is All You Need," 2019. [6] Hu et al., "LoRA: Low-Rank Adaptation of Large Language Models," 2021. [7] Lee-Thorp et al., "FNet: Mixing Tokens with Fourier Transforms," 2021. [8] Gu & Dao, "Mamba: Linear-Time Sequence Modeling with Selective State Spaces," 2023.
+
+---
+
+# Appendix: Implementation
+
+```python
+class UnifiedAttention(nn.Module):
+    def __init__(self, embed_dim, num_heads):
+        self.third = embed_dim // 3
+        self.W_unified = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.W_out = nn.Linear(self.third, embed_dim, bias=False)
+        self.rope = RotaryPositionEmbedding(self.third // num_heads)
+        
+    def forward(self, x):
+        # Single projection, three bands
+        u = self.W_unified(x)
+        seeking, offering, content = u.split(self.third, dim=-1)
+        
+        # RoPE on seeking/offering only (not content)
+        cos, sin = self.rope(x)
+        seeking, offering = apply_rope(seeking, offering, cos, sin)
+        
+        # Standard attention computation
+        out = F.scaled_dot_product_attention(
+            seeking, offering, content, is_causal=True
+        )
+        return self.W_out(out)
+```
+
+---
+
+## YOCTO
+
+**484,272 Parameters · 946 KB (fp16) · 700+ tok/s · 67% Less Attention · Open Source**
+
+### Quick Start
+
+```bash
+git clone https://github.com/reinforceai/yocto
+cd yocto
+pip install -r requirements.txt
+python inference.py --prompt "Once upon a time"
+```
+
+**700+ tokens/sec on CPU**, no GPU needed.
+
+### Live Demo & Model
+
+🤗 **Try it now**: [HuggingFace Space](https://huggingface.co/spaces/Reinforce-ai/yocto-demo)
+
+📦 **Model weights**: [HuggingFace Model](https://huggingface.co/Reinforce-ai/yocto)
+
+🏆 **OpenAI Parameter Golf**: [PR #1202](https://github.com/openai/parameter-golf/pull/1202) (val_bpb 1.1412, 10-min record) | [PR #1270](https://github.com/openai/parameter-golf/pull/1270) (val_bpb 1.1088, 1-hr unlimited, beats all SOTA)
+
+### Citation
+
+If you use this work, please cite:
+
+```bibtex
+@misc{deshwal2026yocto,
+  title={Attention Fields: Unified Projections for Efficient Language Models},
+  author={Deshwal, Viraj},
+  year={2026},
+  url={https://www.reinforceai.com/yocto},
+  howpublished={\url{https://github.com/reinforceai/yocto}}
+}
+```

@@ -4,6 +4,39 @@
 
 ---
 
+## 📑 Table of Contents
+
+- [Abstract](#abstract)
+- [1. Introduction](#1-introduction)
+  - [Contributions](#contributions)
+- [2. Theory: Basis Sharing as a Physical Constraint](#2-theory-basis-sharing-as-a-physical-constraint)
+  - [2.1 Vectors as Waveforms](#21-vectors-as-waveforms)
+  - [2.2 Why Q, K, V Should Share a Basis](#22-why-q-k-v-should-share-a-basis)
+  - [2.3 How Basis Sharing Differs from Fused QKV](#23-how-basis-sharing-differs-from-fused-qkv)
+  - [2.4 Predictions From the Physics Framing](#24-predictions-from-the-physics-framing)
+- [3. Architecture](#3-architecture)
+  - [3.1 Unified Attention](#31-unified-attention)
+  - [3.2 FA3 Head-Dim Padding](#32-fa3-head-dim-padding)
+- [4. Experiments](#4-experiments)
+  - [4.1 Small Scale: TinyStories (484K params)](#41-small-scale-tinystories-484k-params)
+  - [4.2 Large Scale: OpenAI Parameter Golf (23.2M params)](#42-large-scale-openai-parameter-golf-232m-params)
+  - [4.3 Geometric Verification](#43-geometric-verification)
+- [5. Analysis](#5-analysis)
+  - [5.1 Why Does Basis Sharing Work?](#51-why-does-basis-sharing-work)
+  - [5.2 What the Low Attention Share Tells Us](#52-what-the-low-attention-share-tells-us)
+  - [5.3 Limitations](#53-limitations)
+- [6. Related Work](#6-related-work)
+- [7. Future Work](#7-future-work)
+- [8. Conclusion](#8-conclusion)
+- [References](#references)
+- [Appendix: Implementation](#appendix-implementation)
+- [🚀 YOCTO — Quick Start & Live Demo](#yocto)
+  - [Quick Start](#quick-start)
+  - [**▶️ Live Demo & Model**](#-live-demo--model)
+  - [Citation](#citation)
+
+---
+
 # Abstract
 
 Standard transformer attention learns three independent projections W_Q, W_K, W_V, each mapping the input into its own output space. Fused-QKV implementations in PyTorch, nanoGPT, and FlashAttention concatenate these three projections into one matrix for memory-layout reasons, but the three output subspaces remain independent: each third of the output is still a separately learned linear map.
@@ -395,6 +428,7 @@ class UnifiedAttention(nn.Module):
 
 ---
 
+<a id="yocto"></a>
 ## YOCTO
 
 **484,272 Parameters · 946 KB (fp16) · 700+ tok/s · Basis-Shared QKV · Open Source**
@@ -410,7 +444,7 @@ python inference.py --prompt "Once upon a time"
 
 **700+ tokens/sec on CPU**, no GPU needed.
 
-### Live Demo & Model
+### ▶️ Live Demo & Model
 
 🤗 **Try it now**: [HuggingFace Space](https://huggingface.co/spaces/Reinforce-ai/yocto-demo)
 
